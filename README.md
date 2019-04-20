@@ -1,8 +1,13 @@
 # Trust Root Certificates in MacOs, Linux and Windows
 
 ### Installation
+NPM
 ```
 npm i trust-cert
+```
+
+Yarn
+```
 yarn add trust-cert
 ```
 
