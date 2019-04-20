@@ -1,20 +1,8 @@
-import { MacOsTrust, WindowsTrust, LinuxTrust, NssTrust } from '../src/trust-cert'
+import { generateTrust } from '../src/trust-cert'
 import { join } from 'path'
 
 const certPath = join(__dirname, '..', 'certs/eos_root_ca.crt')
 const fakeCertPath = join(__dirname, '..', 'certs/eos_root_ca_fake.crt')
-
-const generateTrust = () => {
-  if (process.platform === 'darwin') {
-    return new MacOsTrust()
-  } else if (process.platform === 'win32') {
-    return new WindowsTrust()
-  } else if (process.platform === 'linux') {
-    return new LinuxTrust()
-  } else {
-    throw new Error('Only MacOs, Linux and Windows supported')
-  }
-}
 
 /**
  * Full test
@@ -32,7 +20,7 @@ describe('Full Test', () => {
   })
 
   it('Firefox Cert', async () => {
-    const trust = new NssTrust()
+    const trust = generateTrust('nss')
     const installed = await trust.installFromFile(certPath)
     expect(installed).toBeTruthy()
   })

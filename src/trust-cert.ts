@@ -8,6 +8,20 @@ const sudoExec = promisify(exec)
 const isDirectory = (source: any) => lstatSync(source).isDirectory()
 const isFile = (source: any) => lstatSync(source).isFile()
 
+export function generateTrust(platform: string = process.platform) {
+  if (platform === 'darwin') {
+    return new MacOsTrust()
+  } else if (platform === 'win32') {
+    return new WindowsTrust()
+  } else if (platform === 'linux') {
+    return new LinuxTrust()
+  } else if (platform === 'nss') {
+    return new NssTrust()
+  } else {
+    throw new Error('Only MacOs, Linux and Windows supported')
+  }
+}
+
 export class Trust {
   name: string = ''
 
