@@ -7,7 +7,8 @@
   "module": "dist/trust-cert.es5.js",
   "typings": "dist/types/trust-cert.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "nss"
   ],
   "author": "Syed Jafri <syed.jafri2@ucalgary.ca>",
   "repository": {
@@ -111,7 +112,6 @@
     "typescript": "^3.0.3"
   },
   "dependencies": {
-    "check-sudo": "^1.0.1",
     "exec-root": "^1.0.3",
     "which": "1.3.1"
   }
