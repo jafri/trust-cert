@@ -1,5 +1,11 @@
 # Trust Root Certificates in MacOs, Linux and Windows
 
+### Installation
+```
+npm i trust-cert
+yarn add trust-cert
+```
+
 ### Auto detect platform
 ```js
 import { generateTrust } from 'trust-cert'
