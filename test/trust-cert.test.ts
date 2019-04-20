@@ -10,8 +10,7 @@ const fakeCertPath = join(__dirname, '..', 'certs/eos_root_ca_fake.crt')
 describe('Full Test', () => {
   it('Installs test root cert', async () => {
     let trust = generateTrust()
-    const installed = await trust.installFromFile(certPath)
-    expect(installed).toBeTruthy()
+    await trust.installFromFile(certPath)
   })
 
   it('Fails on non existent cert', async () => {
@@ -21,7 +20,6 @@ describe('Full Test', () => {
 
   it('Firefox Cert', async () => {
     const trust = generateTrust('nss')
-    const installed = await trust.installFromFile(certPath)
-    expect(installed).toBeTruthy()
+    await trust.installFromFile(certPath)
   })
 })

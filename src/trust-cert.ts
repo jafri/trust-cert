@@ -1,12 +1,28 @@
-import { copyFileSync, accessSync, existsSync, readdirSync, lstatSync } from 'fs'
+import { copyFileSync, accessSync, existsSync, readdirSync, lstat } from 'fs'
 import { join, basename, extname } from 'path'
 import { promisify } from 'util'
 import which from 'which'
 import { exec } from 'exec-root'
 
 const sudoExec = promisify(exec)
-const isDirectory = (source: any) => lstatSync(source).isDirectory()
-const isFile = (source: any) => lstatSync(source).isFile()
+const lstatAsync = promisify(lstat)
+
+const isDirectory = async (source: any) => {
+  try {
+    const stats = await lstatAsync(source)
+    return stats.isDirectory()
+  } catch (e) {
+    return false
+  }
+}
+const isFile = async (source: any) => {
+  try {
+    const stats = await lstatAsync(source)
+    return stats.isFile()
+  } catch (e) {
+    return false
+  }
+}
 
 export function generateTrust(platform: string = process.platform) {
   if (platform === 'darwin') {
@@ -49,7 +65,7 @@ export class MacOsTrust extends Trust {
       `security add-trusted-cert -d -k /Library/Keychains/System.keychain ${certPath}`
     )
 
-    return this.handleInstallResult(stderr)
+    this.handleInstallResult(stderr)
   }
 }
 
@@ -63,17 +79,24 @@ export class NssTrust extends Trust {
     accessSync(certPath)
 
     // Get all user profiles
-    const profiles = readdirSync(this.nssProfileDir)
-      .map(profile => join(this.nssProfileDir, profile))
-      .filter(profile => isDirectory(profile))
+    const profiles = readdirSync(this.nssProfileDir).map(profile =>
+      join(this.nssProfileDir, profile)
+    )
 
-    // If profiles
-    if (profiles.length) {
+    let profileDirs = []
+    for (const profile of profiles) {
+      if (await isDirectory(profile)) {
+        profileDirs.push(profile)
+      }
+    }
+
+    // If any directories
+    if (profileDirs.length) {
       let dbLinks = []
-      for (const profile of profiles) {
-        if (isFile(join(profile, 'cert9.db'))) {
+      for (const profile of profileDirs) {
+        if (await isFile(join(profile, 'cert9.db'))) {
           dbLinks.push(`sql:${profile}`)
-        } else if (isFile(join(profile, 'cert8.db'))) {
+        } else if (await isFile(join(profile, 'cert8.db'))) {
           dbLinks.push(`dbm:${profile}`)
         }
       }
@@ -85,10 +108,8 @@ export class NssTrust extends Trust {
 
         this.handleInstallResult(stderr)
       }
-
-      return true
     } else {
-      return false
+      throw new Error('No profiles with cert8 or cert9 dbs found in firefox directory.')
     }
   }
 
@@ -140,7 +161,7 @@ export class WindowsTrust extends Trust {
 
     const { stderr } = await sudoExec(`certutil -addstore "Root" "${newCertPath}"`)
 
-    return this.handleInstallResult(stderr)
+    this.handleInstallResult(stderr)
   }
 }
 
@@ -190,6 +211,6 @@ export class LinuxTrust extends Trust {
     // Update trust store
     const { stderr } = await sudoExec(this.systemTrustCommands.join(' '))
 
-    return this.handleInstallResult(stderr)
+    this.handleInstallResult(stderr)
   }
 }
