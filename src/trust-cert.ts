@@ -139,10 +139,13 @@ export class WindowsTrust extends Trust {
 
       console.log(stdout)
       console.log(stderr)
-      // Untrusted
-      if (stdout.trim() || stderr) {
+      // ?
+      if (stdout) {
+        return /UNTRUSTED root/.test(stdout)
+        // Does not exist
+      } else if (stderr) {
         return false
-        // Trusted
+        // Exists
       } else {
         return true
       }
