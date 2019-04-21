@@ -8,6 +8,14 @@ const fakeCertPath = join(__dirname, '..', 'certs/eos_root_ca_fake.crt')
  * Full test
  */
 describe('Full Test', () => {
+  it('Matches supported platforms', () => {
+    console.log(process.platform)
+    console.log(process.arch)
+    const supported =
+      process.platform === 'darwin' || process.platform === 'linux' || process.platform === 'win32'
+    expect(supported).toBeTruthy()
+  })
+
   it('Installs test root cert', async () => {
     let trust = generateTrust()
     await trust.installFromFile(certPath)
