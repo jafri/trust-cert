@@ -1,4 +1,4 @@
-import { generateTrust } from '../src/trust-cert'
+import { generateTrust, isDirectory, NssTrust } from '../src/trust-cert'
 import { join } from 'path'
 
 const certPath = join(__dirname, '..', 'certs/eos_root_ca.crt')
@@ -45,25 +45,25 @@ describe('Full Platform Test', () => {
 })
 
 describe('Full Firefox Test', () => {
-  it('Installs Firefox Cert', async () => {
-    const trust = generateTrust('nss')
-    await trust.installFromFile(certPath)
-  }, 10000)
+  const trust = new NssTrust()
 
-  it('Confirm installed firefox cert', async () => {
-    const trust = generateTrust('nss')
-    const exists = await trust.exists(certPath)
-    expect(exists).toBeTruthy()
-  }, 10000)
+  if (trust.nssProfileDir) {
+    it('Installs Firefox Cert', async () => {
+      await trust.installFromFile(certPath)
+    }, 10000)
 
-  it('Uninstalls Firefox Cert', async () => {
-    const trust = generateTrust('nss')
-    await trust.uninstall(certPath)
-  }, 10000)
+    it('Confirm installed firefox cert', async () => {
+      const exists = await trust.exists(certPath)
+      expect(exists).toBeTruthy()
+    }, 10000)
 
-  it('Confirm uninstalled firefox cert', async () => {
-    const trust = generateTrust('nss')
-    const exists = await trust.exists(certPath)
-    expect(exists).toBeFalsy()
-  }, 10000)
+    it('Uninstalls Firefox Cert', async () => {
+      await trust.uninstall(certPath)
+    }, 10000)
+
+    it('Confirm uninstalled firefox cert', async () => {
+      const exists = await trust.exists(certPath)
+      expect(exists).toBeFalsy()
+    }, 10000)
+  }
 })

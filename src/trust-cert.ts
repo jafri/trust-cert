@@ -9,7 +9,7 @@ import { exec } from 'child_process'
 const nonSudoExec = promisify(exec)
 const lstatAsync = promisify(lstat)
 
-const isDirectory = async (source: any) => {
+export const isDirectory = async (source: any) => {
   try {
     const stats = await lstatAsync(source)
     return stats.isDirectory()
@@ -50,10 +50,6 @@ export function generateTrust(platform: string = process.platform) {
 
 export class Trust {
   name: string = ''
-
-  async exists(certPath: string): Promise<boolean> {
-    return false
-  }
 
   handleInstallResult(stderr: string, adding: boolean) {
     if (stderr) {
@@ -252,6 +248,7 @@ export class NssTrust extends Trust {
         console.log('Firefox exists stdout:', stdout)
         console.log('Firefox exists stderr:', stderr)
       } catch (e) {
+        console.log('Firefox exists error:', e)
         allExist = false
       }
     }
