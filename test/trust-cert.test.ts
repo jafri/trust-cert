@@ -47,23 +47,29 @@ describe('Full Platform Test', () => {
 describe('Full Firefox Test', () => {
   const trust = new NssTrust()
 
-  if (trust.nssProfileDir) {
-    it('Installs Firefox Cert', async () => {
+  it('Installs Firefox Cert', async () => {
+    if (await isDirectory(trust.nssProfileDir)) {
       await trust.installFromFile(certPath)
-    }, 10000)
+    }
+  }, 10000)
 
-    it('Confirm installed firefox cert', async () => {
+  it('Confirm installed firefox cert', async () => {
+    if (await isDirectory(trust.nssProfileDir)) {
       const exists = await trust.exists(certPath)
       expect(exists).toBeTruthy()
-    }, 10000)
+    }
+  }, 10000)
 
-    it('Uninstalls Firefox Cert', async () => {
+  it('Uninstalls Firefox Cert', async () => {
+    if (await isDirectory(trust.nssProfileDir)) {
       await trust.uninstall(certPath)
-    }, 10000)
+    }
+  }, 10000)
 
-    it('Confirm uninstalled firefox cert', async () => {
+  it('Confirm uninstalled firefox cert', async () => {
+    if (await isDirectory(trust.nssProfileDir)) {
       const exists = await trust.exists(certPath)
       expect(exists).toBeFalsy()
-    }, 10000)
-  }
+    }
+  }, 10000)
 })

@@ -238,17 +238,15 @@ export class NssTrust extends Trust {
   }
 
   async exists(certPath: string): Promise<boolean> {
-    let allExist = true
+    const firefoxDbs = await this.getFirefoxDatabases()
+    let allExist = firefoxDbs.length > 0
 
-    for (const db of await this.getFirefoxDatabases()) {
+    for (const db of firefoxDbs) {
       try {
-        const { stdout, stderr } = await nonSudoExec(
+        await nonSudoExec(
           `${this.certutilPath} -V -d "${db}" -n "${await getCertCommonName(certPath)}" -u L`
         )
-        console.log('Firefox exists stdout:', stdout)
-        console.log('Firefox exists stderr:', stderr)
       } catch (e) {
-        console.log('Firefox exists error:', e)
         allExist = false
       }
     }
