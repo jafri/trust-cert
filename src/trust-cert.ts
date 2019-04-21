@@ -137,11 +137,9 @@ export class WindowsTrust extends Trust {
     try {
       const { stdout, stderr } = await nonSudoExec(`certutil.exe -verify "${certPath}"`)
 
-      console.log(stdout)
-      console.log(stderr)
       // ?
       if (stdout) {
-        return /UNTRUSTED root/.test(stdout)
+        return !/UNTRUSTED root/.test(stdout)
         // Does not exist
       } else if (stderr) {
         return false
@@ -150,7 +148,6 @@ export class WindowsTrust extends Trust {
         return true
       }
     } catch (e) {
-      console.log(e)
       return false
     }
   }
