@@ -112,9 +112,9 @@ export class WindowsTrust extends Trust {
       if (stdout) {
         const [, , serialNumber] = stdout.split(' ')
         const { stderr } = await sudoExec(`certutil -delstore "Root" "${serialNumber.trim()}"`)
-        this.handleInstallResult(stderr, true)
+        this.handleInstallResult(stderr, false)
       } else {
-        this.handleInstallResult(stderr, true)
+        this.handleInstallResult(stderr, false)
       }
     }
   }
