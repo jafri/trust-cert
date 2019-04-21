@@ -1,10 +1,12 @@
-import { copyFileSync, accessSync, existsSync, readdirSync, lstat } from 'fs'
+import { copyFileSync, accessSync, existsSync, readdirSync, lstat, readFileSync } from 'fs'
 import { join, basename, extname } from 'path'
 import { promisify } from 'util'
 import which from 'async-which'
 import { exec as sudoExec } from 'exec-root'
+import { Certificate } from '@fidm/x509'
 
 const lstatAsync = promisify(lstat)
+const DEFAULT_CERT_NAME = 'New Root CA'
 
 const isDirectory = async (source: any) => {
   try {
@@ -40,14 +42,14 @@ export function generateTrust(platform: string = process.platform) {
 export class Trust {
   name: string = ''
 
-  handleInstallResult(stderr: string) {
+  handleInstallResult(stderr: string, adding: boolean) {
     if (stderr) {
       throw {
-        message: `Could not add cert to ${this.name} store`,
+        message: `Could not ${adding ? 'add cert to' : 'remove cert from'} ${this.name} store`,
         err: stderr
       }
     } else {
-      console.log(`Certificate successfully added to ${this.name}!`)
+      console.log(`Certificate successfully ${adding ? 'added to' : 'removed from'} ${this.name}!`)
       return true
     }
   }
@@ -56,15 +58,122 @@ export class Trust {
 export class MacOsTrust extends Trust {
   name: string = 'MacOs'
 
-  async installFromFile(certPath: string, certName: string = 'New Root CA') {
+  async installFromFile(certPath: string, certName: string = DEFAULT_CERT_NAME) {
     // Check cert exists
     accessSync(certPath)
 
     const { stderr } = await sudoExec(
-      `security add-trusted-cert -d -k /Library/Keychains/System.keychain ${certPath}`
+      `security add-trusted-cert -d -k /Library/Keychains/System.keychain "${certPath}"`
     )
 
-    this.handleInstallResult(stderr)
+    this.handleInstallResult(stderr, true)
+  }
+
+  async uninstall(certPath: string, certName: string = DEFAULT_CERT_NAME) {
+    // Check cert exists
+    accessSync(certPath)
+    const { stderr } = await sudoExec(`security remove-trusted-cert -d "${certPath}"`)
+    this.handleInstallResult(stderr, false)
+  }
+}
+
+export class WindowsTrust extends Trust {
+  name: string = 'Windows'
+
+  async installFromFile(certPath: string, certName: string = DEFAULT_CERT_NAME) {
+    // Check cert exists
+    accessSync(certPath)
+
+    // Copy over to .cer
+    const newCertPath = this.convertPathToCer(certPath)
+
+    // Copy cert to trust path
+    copyFileSync(certPath, newCertPath)
+
+    const { stderr } = await sudoExec(`certutil -addstore "Root" "${newCertPath}"`)
+
+    this.handleInstallResult(stderr, true)
+  }
+
+  async uninstall(certPath: string, certName: string = DEFAULT_CERT_NAME) {
+    // Check cert exists
+    accessSync(certPath)
+
+    // Read in cert
+    const cert = Certificate.fromPEM(readFileSync(certPath))
+
+    if (cert) {
+      const { stdout } = await sudoExec(`certutil.exe -dump ${certPath}`)
+
+      if (stdout) {
+        console.log(stdout)
+      }
+    }
+  }
+
+  convertPathToCer(oldCertPath: string) {
+    return oldCertPath.substr(0, oldCertPath.lastIndexOf('.')) + '.cer'
+  }
+}
+
+export class LinuxTrust extends Trust {
+  name: string = 'Linux'
+
+  // SystemTrustFilename is the format used to name the root certificates.
+  systemTrustFilename: string = ''
+
+  // systemTrustCommands is the command used to update the system truststore.
+  systemTrustCommands: string[] = []
+
+  constructor() {
+    super()
+
+    if (existsSync('/etc/pki/ca-trust/source/anchors/')) {
+      this.systemTrustFilename = '/etc/pki/ca-trust/source/anchors/%s.pem'
+      this.systemTrustCommands = ['update-ca-trust', 'extract']
+    } else if (existsSync('/usr/local/share/ca-certificates/')) {
+      this.systemTrustFilename = '/usr/local/share/ca-certificates/%s.crt'
+      this.systemTrustCommands = ['update-ca-certificates']
+    } else if (existsSync('/etc/ca-certificates/trust-source/anchors/')) {
+      this.systemTrustFilename = '/etc/ca-certificates/trust-source/anchors/%s.crt'
+      this.systemTrustCommands = ['trust', 'extract-compat']
+    }
+
+    if (this.systemTrustCommands) {
+      const resolved = which(this.systemTrustCommands[0])
+
+      if (!resolved) {
+        this.systemTrustCommands = []
+      }
+    }
+  }
+
+  async installFromFile(certPath: string, certName: string = DEFAULT_CERT_NAME) {
+    // Check cert exists
+    existsSync(certPath)
+
+    // Change file name
+    const certFileName = basename(certPath, extname(certPath))
+    const newCertPath = this.systemTrustFilename.replace('%s', certFileName)
+
+    // Copy cert to trust path
+    copyFileSync(certPath, newCertPath)
+
+    // Update trust store
+    const { stderr } = await sudoExec(this.systemTrustCommands.join(' '))
+
+    this.handleInstallResult(stderr, true)
+  }
+
+  async uninstall(certPath: string, certName: string = DEFAULT_CERT_NAME) {
+    // Change file name
+    const certFileName = basename(certPath, extname(certPath))
+    const newCertPath = this.systemTrustFilename.replace('%s', certFileName)
+
+    // Delete
+    const { stderr } = await sudoExec(`rm -f ${newCertPath}`)
+
+    this.handleInstallResult(stderr, false)
   }
 }
 
@@ -73,10 +182,28 @@ export class NssTrust extends Trust {
   nssProfileDir: string = this.getNssProfileDir()
   certutilPath: string = this.getCertutilPath()
 
-  async installFromFile(certPath: string, certName: string = 'New Root CA') {
+  async installFromFile(certPath: string, certName: string = DEFAULT_CERT_NAME) {
     // Check cert exists
     accessSync(certPath)
 
+    for (const db of await this.getFirefoxDatabases()) {
+      const { stderr } = await sudoExec(
+        `${this.certutilPath} -A -d "${db}" -t C,, -n "${certName}" -i "${certPath}"`
+      )
+
+      this.handleInstallResult(stderr, true)
+    }
+  }
+
+  async uninstall(certPath: string, certName: string = DEFAULT_CERT_NAME) {
+    for (const db of await this.getFirefoxDatabases()) {
+      const { stderr } = await sudoExec(`${this.certutilPath} -D -d "${db}" -n "${certName}"`)
+
+      this.handleInstallResult(stderr, false)
+    }
+  }
+
+  async getFirefoxDatabases() {
     // Get all user profiles
     const profiles = readdirSync(this.nssProfileDir).map(profile =>
       join(this.nssProfileDir, profile)
@@ -100,13 +227,7 @@ export class NssTrust extends Trust {
         }
       }
 
-      for (const db of dbLinks) {
-        const { stderr } = await sudoExec(
-          `${this.certutilPath} -A -d "${db}" -t C,, -n "${certName}" -i "${certPath}"`
-        )
-
-        this.handleInstallResult(stderr)
-      }
+      return dbLinks
     } else {
       throw new Error('No profiles with cert8 or cert9 dbs found in firefox directory.')
     }
@@ -143,74 +264,5 @@ export class NssTrust extends Trust {
     } else {
       throw new Error('NSS only supported on MacOs, Linux and Windows')
     }
-  }
-}
-
-export class WindowsTrust extends Trust {
-  name: string = 'Windows'
-
-  async installFromFile(certPath: string, certName: string = 'New Root CA') {
-    // Check cert exists
-    accessSync(certPath)
-
-    // Copy over to .cer
-    const newCertPath = certPath.substr(0, certPath.lastIndexOf('.')) + '.cer'
-
-    // Copy cert to trust path
-    copyFileSync(certPath, newCertPath)
-
-    const { stderr } = await sudoExec(`certutil -addstore "Root" "${newCertPath}"`)
-
-    this.handleInstallResult(stderr)
-  }
-}
-
-export class LinuxTrust extends Trust {
-  name: string = 'Linux'
-
-  // SystemTrustFilename is the format used to name the root certificates.
-  systemTrustFilename: string = ''
-
-  // systemTrustCommands is the command used to update the system truststore.
-  systemTrustCommands: string[] = []
-
-  constructor() {
-    super()
-
-    if (existsSync('/etc/pki/ca-trust/source/anchors/')) {
-      this.systemTrustFilename = '/etc/pki/ca-trust/source/anchors/%s.pem'
-      this.systemTrustCommands = ['update-ca-trust', 'extract']
-    } else if (existsSync('/usr/local/share/ca-certificates/')) {
-      this.systemTrustFilename = '/usr/local/share/ca-certificates/%s.crt'
-      this.systemTrustCommands = ['update-ca-certificates']
-    } else if (existsSync('/etc/ca-certificates/trust-source/anchors/')) {
-      this.systemTrustFilename = '/etc/ca-certificates/trust-source/anchors/%s.crt'
-      this.systemTrustCommands = ['trust', 'extract-compat']
-    }
-
-    if (this.systemTrustCommands) {
-      const resolved = which(this.systemTrustCommands[0])
-
-      if (!resolved) {
-        this.systemTrustCommands = []
-      }
-    }
-  }
-
-  async installFromFile(certPath: string, certName: string = 'New Root CA') {
-    // Check cert exists
-    existsSync(certPath)
-
-    // Change file name
-    const certFileName = basename(certPath, extname(certPath))
-    const newCertPath = this.systemTrustFilename.replace('%s', certFileName)
-
-    // Copy cert to trust path
-    copyFileSync(certPath, newCertPath)
-
-    // Update trust store
-    const { stderr } = await sudoExec(this.systemTrustCommands.join(' '))
-
-    this.handleInstallResult(stderr)
   }
 }

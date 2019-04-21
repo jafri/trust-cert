@@ -13,7 +13,7 @@
   "author": "Syed Jafri <syed.jafri2@ucalgary.ca>",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/jafri/trust-cert"
   },
   "license": "BSD-3-Clause",
   "engines": {
@@ -112,6 +112,7 @@
     "typescript": "^3.0.3"
   },
   "dependencies": {
+    "@fidm/x509": "1.2.1",
     "async-which": "^1.0.3",
     "exec-root": "^1.0.4"
   }

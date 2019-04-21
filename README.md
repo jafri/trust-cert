@@ -15,7 +15,7 @@ Yarn
 yarn add trust-cert
 ```
 
-## Auto detect platform
+## Install Certificate
 ```js
 import { generateTrust } from 'trust-cert'
 import { join } from 'path'
@@ -24,50 +24,24 @@ const certPath = join(__dirname, 'certs/eos_root_ca.crt')
 const trust = generateTrust()
 
 (async () => {
-    await trust.installFromFile(certPath)
+    await trust.installFromFile(certPath, 'EOS Root CA')
 })
 ```
 
-## MacOs
+## Uninstall Certificate
 ```js
-import { MacOsTrust } from 'trust-cert'
+import { generateTrust } from 'trust-cert'
 import { join } from 'path'
 
 const certPath = join(__dirname, 'certs/eos_root_ca.crt')
-const trust = new MacOsTrust()
+const trust = generateTrust()
 
 (async () => {
-    await trust.installFromFile(certPath)
+    await trust.uninstall(certPath, 'EOS Root CA')
 })
 ```
 
-## Linux
-```js
-import { LinuxTrust } from 'trust-cert'
-import { join } from 'path'
-
-const certPath = join(__dirname, 'certs/eos_root_ca.crt')
-const trust = new LinuxTrust()
-
-(async () => {
-    await trust.installFromFile(certPath)
-})
-```
-
-## Windows
-```js
-import { WindowsTrust } from 'trust-cert'
-import { join } from 'path'
-
-const certPath = join(__dirname, 'certs/eos_root_ca.crt')
-const trust = new WindowsTrust()
-
-(async () => {
-    await trust.installFromFile(certPath)
-})
-```
-
-## NSS (Cross-platform firefox)
+## NSS (Firefox) Certificate Install
 Firefox does not use system store, so we package cross-platform nss binaries.
 
 ```js
@@ -78,7 +52,22 @@ const certPath = join(__dirname, 'certs/eos_root_ca.crt')
 const trust = new NssTrust()
 
 (async () => {
-    await trust.installFromFile(certPath)
+    await trust.installFromFile(certPath, 'EOS Root CA')
+})
+```
+
+## NSS (Firefox) Certificate Uninstall
+Firefox does not use system store, so we package cross-platform nss binaries.
+
+```js
+import { NssTrust } from 'trust-cert'
+import { join } from 'path'
+
+const certPath = join(__dirname, 'certs/eos_root_ca.crt')
+const trust = new NssTrust()
+
+(async () => {
+    await trust.uninstall(certPath, 'EOS Root CA')
 })
 ```
 

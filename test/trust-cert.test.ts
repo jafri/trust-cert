@@ -18,7 +18,12 @@ describe('Full Test', () => {
 
   it('Installs test root cert', async () => {
     let trust = generateTrust()
-    await trust.installFromFile(certPath)
+    await trust.installFromFile(certPath, 'EOS Root CA')
+  }, 10000)
+
+  it('Uninstalls test root cert', async () => {
+    let trust = generateTrust()
+    await trust.uninstall(certPath, 'EOS Root CA')
   }, 10000)
 
   it('Fails on non existent cert', async () => {
@@ -26,8 +31,13 @@ describe('Full Test', () => {
     await expect(trust.installFromFile(fakeCertPath)).rejects.toThrow()
   })
 
-  it('Firefox Cert', async () => {
+  it('Installs Firefox Cert', async () => {
     const trust = generateTrust('nss')
-    await trust.installFromFile(certPath)
+    await trust.installFromFile(certPath, 'EOS Root CA')
+  }, 10000)
+
+  it('Uninstalls Firefox Cert', async () => {
+    const trust = generateTrust('nss')
+    await trust.uninstall(certPath, 'EOS Root CA')
   }, 10000)
 })
