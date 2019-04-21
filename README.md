@@ -1,6 +1,6 @@
 # trust-cert [![Build Status](https://travis-ci.com/jafri/trust-cert.svg?branch=master)](https://travis-ci.com/jafri/trust-cert)
 
-> Trust Root Certificates in MacOs, Linux and Windows
+> Trust Root Certificates in MacOs, Linux, Windows and Firefox (nss)
 
 [Docs](https://jafri.github.io/trust-cert)
 
