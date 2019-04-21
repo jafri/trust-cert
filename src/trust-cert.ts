@@ -280,7 +280,8 @@ export class NssTrust extends Trust {
 
       return dbLinks
     } else {
-      throw new Error('No profiles with cert8 or cert9 dbs found in firefox directory.')
+      console.log('No profiles with cert8 or cert9 dbs found in firefox directory.')
+      return []
     }
   }
 

@@ -928,12 +928,15 @@ img { max-width: 100%; }
 			<a href="globals.html#lstatasync" class="tsd-kind-icon">lstat<wbr>Async</a>
 		</li>
 		<li class=" tsd-kind-variable tsd-is-not-exported">
-			<a href="globals.html#sudoexec" class="tsd-kind-icon">sudo<wbr>Exec</a>
+			<a href="globals.html#nonsudoexec" class="tsd-kind-icon">non<wbr>Sudo<wbr>Exec</a>
 		</li>
 		<li class=" tsd-kind-function">
 			<a href="globals.html#generatetrust" class="tsd-kind-icon">generate<wbr>Trust</a>
 		</li>
 		<li class=" tsd-kind-function tsd-is-not-exported">
+			<a href="globals.html#getcertcommonname" class="tsd-kind-icon">get<wbr>Cert<wbr>Common<wbr>Name</a>
+		</li>
+		<li class=" tsd-kind-function">
 			<a href="globals.html#isdirectory" class="tsd-kind-icon">is<wbr>Directory</a>
 		</li>
 		<li class=" tsd-kind-function tsd-is-not-exported">
@@ -946,12 +949,13 @@ img { max-width: 100%; }
 		<div class="tsd-panel tsd-typography">
 			<h1 id="trust-cert-build-status">trust-cert <a href="https://travis-ci.com/jafri/trust-cert"><img src="https://travis-ci.com/jafri/trust-cert.svg?branch=master" alt="Build Status"></a></h1>
 			<blockquote>
-				<p>Trust Root Certificates in MacOs, Linux and Windows</p>
+				<p>Trust Root Certificates in MacOs, Linux, Windows and Firefox (nss)</p>
 			</blockquote>
-			<h3 id="installation">Installation</h3>
+			<p><a href="https://jafri.github.io/trust-cert">Docs</a></p>
+			<h2 id="installation">Installation</h2>
 			<p>NPM</p>
 			<pre><code>npm <span class="hljs-selector-tag">i</span> trust-cert</code></pre><p>Yarn</p>
-			<pre><code>yarn <span class="hljs-keyword">add</span><span class="bash"> trust-cert</span></code></pre><h3 id="auto-detect-platform">Auto detect platform</h3>
+			<pre><code>yarn <span class="hljs-keyword">add</span><span class="bash"> trust-cert</span></code></pre><h2 id="install-certificate">Install Certificate</h2>
 			<pre><code class="language-js"><span class="hljs-keyword">import</span> { generateTrust } <span class="hljs-keyword">from</span> <span class="hljs-string">'trust-cert'</span>
 <span class="hljs-keyword">import</span> { join } <span class="hljs-keyword">from</span> <span class="hljs-string">'path'</span>
 
@@ -959,39 +963,19 @@ img { max-width: 100%; }
 <span class="hljs-keyword">const</span> trust = generateTrust()
 
 (<span class="hljs-keyword">async</span> () =&gt; {
-    <span class="hljs-keyword">await</span> trust.installFromFile(certPath)
+    <span class="hljs-keyword">await</span> trust.installFromFile(certPath, <span class="hljs-string">'EOS Root CA'</span>)
 })</code></pre>
-			<h3 id="macos">MacOs</h3>
-			<pre><code class="language-js"><span class="hljs-keyword">import</span> { MacOsTrust } <span class="hljs-keyword">from</span> <span class="hljs-string">'trust-cert'</span>
+			<h2 id="uninstall-certificate">Uninstall Certificate</h2>
+			<pre><code class="language-js"><span class="hljs-keyword">import</span> { generateTrust } <span class="hljs-keyword">from</span> <span class="hljs-string">'trust-cert'</span>
 <span class="hljs-keyword">import</span> { join } <span class="hljs-keyword">from</span> <span class="hljs-string">'path'</span>
 
 <span class="hljs-keyword">const</span> certPath = join(__dirname, <span class="hljs-string">'certs/eos_root_ca.crt'</span>)
-<span class="hljs-keyword">const</span> trust = <span class="hljs-keyword">new</span> MacOsTrust()
+<span class="hljs-keyword">const</span> trust = generateTrust()
 
 (<span class="hljs-keyword">async</span> () =&gt; {
-    <span class="hljs-keyword">await</span> trust.installFromFile(certPath)
+    <span class="hljs-keyword">await</span> trust.uninstall(certPath, <span class="hljs-string">'EOS Root CA'</span>)
 })</code></pre>
-			<h3 id="linux">Linux</h3>
-			<pre><code class="language-js"><span class="hljs-keyword">import</span> { LinuxTrust } <span class="hljs-keyword">from</span> <span class="hljs-string">'trust-cert'</span>
-<span class="hljs-keyword">import</span> { join } <span class="hljs-keyword">from</span> <span class="hljs-string">'path'</span>
-
-<span class="hljs-keyword">const</span> certPath = join(__dirname, <span class="hljs-string">'certs/eos_root_ca.crt'</span>)
-<span class="hljs-keyword">const</span> trust = <span class="hljs-keyword">new</span> LinuxTrust()
-
-(<span class="hljs-keyword">async</span> () =&gt; {
-    <span class="hljs-keyword">await</span> trust.installFromFile(certPath)
-})</code></pre>
-			<h3 id="windows">Windows</h3>
-			<pre><code class="language-js"><span class="hljs-keyword">import</span> { WindowsTrust } <span class="hljs-keyword">from</span> <span class="hljs-string">'trust-cert'</span>
-<span class="hljs-keyword">import</span> { join } <span class="hljs-keyword">from</span> <span class="hljs-string">'path'</span>
-
-<span class="hljs-keyword">const</span> certPath = join(__dirname, <span class="hljs-string">'certs/eos_root_ca.crt'</span>)
-<span class="hljs-keyword">const</span> trust = <span class="hljs-keyword">new</span> WindowsTrust()
-
-(<span class="hljs-keyword">async</span> () =&gt; {
-    <span class="hljs-keyword">await</span> trust.installFromFile(certPath)
-})</code></pre>
-			<h3 id="nss-cross-platform-firefox-">NSS (Cross-platform firefox)</h3>
+			<h2 id="nss-firefox-certificate-install">NSS (Firefox) Certificate Install</h2>
 			<p>Firefox does not use system store, so we package cross-platform nss binaries.</p>
 			<pre><code class="language-js"><span class="hljs-keyword">import</span> { NssTrust } <span class="hljs-keyword">from</span> <span class="hljs-string">'trust-cert'</span>
 <span class="hljs-keyword">import</span> { join } <span class="hljs-keyword">from</span> <span class="hljs-string">'path'</span>
@@ -1000,9 +984,21 @@ img { max-width: 100%; }
 <span class="hljs-keyword">const</span> trust = <span class="hljs-keyword">new</span> NssTrust()
 
 (<span class="hljs-keyword">async</span> () =&gt; {
-    <span class="hljs-keyword">await</span> trust.installFromFile(certPath)
+    <span class="hljs-keyword">await</span> trust.installFromFile(certPath, <span class="hljs-string">'EOS Root CA'</span>)
+})</code></pre>
+			<h2 id="nss-firefox-certificate-uninstall">NSS (Firefox) Certificate Uninstall</h2>
+			<p>Firefox does not use system store, so we package cross-platform nss binaries.</p>
+			<pre><code class="language-js"><span class="hljs-keyword">import</span> { NssTrust } <span class="hljs-keyword">from</span> <span class="hljs-string">'trust-cert'</span>
+<span class="hljs-keyword">import</span> { join } <span class="hljs-keyword">from</span> <span class="hljs-string">'path'</span>
+
+<span class="hljs-keyword">const</span> certPath = join(__dirname, <span class="hljs-string">'certs/eos_root_ca.crt'</span>)
+<span class="hljs-keyword">const</span> trust = <span class="hljs-keyword">new</span> NssTrust()
+
+(<span class="hljs-keyword">async</span> () =&gt; {
+    <span class="hljs-keyword">await</span> trust.uninstall(certPath, <span class="hljs-string">'EOS Root CA'</span>)
 })</code></pre>
 			<p>Note: The tests install the root CA in the certs folder into your store, modify the certs folder if you wish to test with your own cert.</p>
+			<p>Credits: <a href="https://github.com/FiloSottile/mkcert">mkcert</a></p>
 		</div>
 		<section class="tsd-panel-group tsd-index-group">
 			<h2>Index</h2>
@@ -1022,14 +1018,15 @@ img { max-width: 100%; }
 						<h3>Variables</h3>
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-variable tsd-is-not-exported"><a href="globals.html#lstatasync" class="tsd-kind-icon">lstat<wbr>Async</a></li>
-							<li class="tsd-kind-variable tsd-is-not-exported"><a href="globals.html#sudoexec" class="tsd-kind-icon">sudo<wbr>Exec</a></li>
+							<li class="tsd-kind-variable tsd-is-not-exported"><a href="globals.html#nonsudoexec" class="tsd-kind-icon">non<wbr>Sudo<wbr>Exec</a></li>
 						</ul>
 					</section>
 					<section class="tsd-index-section ">
 						<h3>Functions</h3>
 						<ul class="tsd-index-list">
 							<li class="tsd-kind-function"><a href="globals.html#generatetrust" class="tsd-kind-icon">generate<wbr>Trust</a></li>
-							<li class="tsd-kind-function tsd-is-not-exported"><a href="globals.html#isdirectory" class="tsd-kind-icon">is<wbr>Directory</a></li>
+							<li class="tsd-kind-function tsd-is-not-exported"><a href="globals.html#getcertcommonname" class="tsd-kind-icon">get<wbr>Cert<wbr>Common<wbr>Name</a></li>
+							<li class="tsd-kind-function"><a href="globals.html#isdirectory" class="tsd-kind-icon">is<wbr>Directory</a></li>
 							<li class="tsd-kind-function tsd-is-not-exported"><a href="globals.html#isfile" class="tsd-kind-icon">is<wbr>File</a></li>
 						</ul>
 					</section>
@@ -1044,17 +1041,17 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">lstat<wbr>Async<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">__promisify__</span><span class="tsd-signature-symbol"> =&nbsp;promisify(lstat)</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/58b558e/src/trust-cert.ts#L8">trust-cert.ts:8</a></li>
+						<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L10">trust-cert.ts:10</a></li>
 					</ul>
 				</aside>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-variable tsd-is-not-exported">
-				<a name="sudoexec" class="tsd-anchor"></a>
-				<h3><span class="tsd-flag ts-flagConst">Const</span> sudo<wbr>Exec</h3>
-				<div class="tsd-signature tsd-kind-icon">sudo<wbr>Exec<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">__promisify__</span><span class="tsd-signature-symbol"> =&nbsp;promisify(exec)</span></div>
+				<a name="nonsudoexec" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagConst">Const</span> non<wbr>Sudo<wbr>Exec</h3>
+				<div class="tsd-signature tsd-kind-icon">non<wbr>Sudo<wbr>Exec<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">__promisify__</span><span class="tsd-signature-symbol"> =&nbsp;promisify(exec)</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/58b558e/src/trust-cert.ts#L7">trust-cert.ts:7</a></li>
+						<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L9">trust-cert.ts:9</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1065,13 +1062,13 @@ img { max-width: 100%; }
 				<a name="generatetrust" class="tsd-anchor"></a>
 				<h3>generate<wbr>Trust</h3>
 				<ul class="tsd-signatures tsd-kind-function">
-					<li class="tsd-signature tsd-kind-icon">generate<wbr>Trust<span class="tsd-signature-symbol">(</span>platform<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="classes/macostrust.html" class="tsd-signature-type">MacOsTrust</a><span class="tsd-signature-symbol"> | </span><a href="classes/nsstrust.html" class="tsd-signature-type">NssTrust</a><span class="tsd-signature-symbol"> | </span><a href="classes/windowstrust.html" class="tsd-signature-type">WindowsTrust</a><span class="tsd-signature-symbol"> | </span><a href="classes/linuxtrust.html" class="tsd-signature-type">LinuxTrust</a></li>
+					<li class="tsd-signature tsd-kind-icon">generate<wbr>Trust<span class="tsd-signature-symbol">(</span>platform<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="classes/macostrust.html" class="tsd-signature-type">MacOsTrust</a><span class="tsd-signature-symbol"> | </span><a href="classes/windowstrust.html" class="tsd-signature-type">WindowsTrust</a><span class="tsd-signature-symbol"> | </span><a href="classes/linuxtrust.html" class="tsd-signature-type">LinuxTrust</a><span class="tsd-signature-symbol"> | </span><a href="classes/nsstrust.html" class="tsd-signature-type">NssTrust</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/58b558e/src/trust-cert.ts#L27">trust-cert.ts:27</a></li>
+								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L37">trust-cert.ts:37</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1082,26 +1079,49 @@ img { max-width: 100%; }
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="classes/macostrust.html" class="tsd-signature-type">MacOsTrust</a>
 							<span class="tsd-signature-symbol"> | </span>
-							<a href="classes/nsstrust.html" class="tsd-signature-type">NssTrust</a>
-							<span class="tsd-signature-symbol"> | </span>
 							<a href="classes/windowstrust.html" class="tsd-signature-type">WindowsTrust</a>
 							<span class="tsd-signature-symbol"> | </span>
 							<a href="classes/linuxtrust.html" class="tsd-signature-type">LinuxTrust</a>
+							<span class="tsd-signature-symbol"> | </span>
+							<a href="classes/nsstrust.html" class="tsd-signature-type">NssTrust</a>
 						</h4>
 					</li>
 				</ul>
 			</section>
 			<section class="tsd-panel tsd-member tsd-kind-function tsd-is-not-exported">
+				<a name="getcertcommonname" class="tsd-anchor"></a>
+				<h3><span class="tsd-flag ts-flagConst">Const</span> get<wbr>Cert<wbr>Common<wbr>Name</h3>
+				<ul class="tsd-signatures tsd-kind-function tsd-is-not-exported">
+					<li class="tsd-signature tsd-kind-icon">get<wbr>Cert<wbr>Common<wbr>Name<span class="tsd-signature-symbol">(</span>certPath<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L28">trust-cert.ts:28</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>certPath: <span class="tsd-signature-type">string</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-function">
 				<a name="isdirectory" class="tsd-anchor"></a>
 				<h3><span class="tsd-flag ts-flagConst">Const</span> is<wbr>Directory</h3>
-				<ul class="tsd-signatures tsd-kind-function tsd-is-not-exported">
+				<ul class="tsd-signatures tsd-kind-function">
 					<li class="tsd-signature tsd-kind-icon">is<wbr>Directory<span class="tsd-signature-symbol">(</span>source<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/58b558e/src/trust-cert.ts#L10">trust-cert.ts:10</a></li>
+								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L12">trust-cert.ts:12</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1124,7 +1144,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/58b558e/src/trust-cert.ts#L18">trust-cert.ts:18</a></li>
+								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L20">trust-cert.ts:20</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>

@@ -918,11 +918,17 @@ img { max-width: 100%; }
 				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-overwrite">
 					<a href="macostrust.html#name" class="tsd-kind-icon">name</a>
 				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="macostrust.html#exists" class="tsd-kind-icon">exists</a>
+				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 					<a href="macostrust.html#handleinstallresult" class="tsd-kind-icon">handle<wbr>Install<wbr>Result</a>
 				</li>
 				<li class=" tsd-kind-method tsd-parent-kind-class">
 					<a href="macostrust.html#installfromfile" class="tsd-kind-icon">install<wbr>From<wbr>File</a>
+				</li>
+				<li class=" tsd-kind-method tsd-parent-kind-class">
+					<a href="macostrust.html#uninstall" class="tsd-kind-icon">uninstall</a>
 				</li>
 			</ul>
 		</li>
@@ -939,12 +945,15 @@ img { max-width: 100%; }
 			<a href="../globals.html#lstatasync" class="tsd-kind-icon">lstat<wbr>Async</a>
 		</li>
 		<li class=" tsd-kind-variable tsd-is-not-exported">
-			<a href="../globals.html#sudoexec" class="tsd-kind-icon">sudo<wbr>Exec</a>
+			<a href="../globals.html#nonsudoexec" class="tsd-kind-icon">non<wbr>Sudo<wbr>Exec</a>
 		</li>
 		<li class=" tsd-kind-function">
 			<a href="../globals.html#generatetrust" class="tsd-kind-icon">generate<wbr>Trust</a>
 		</li>
 		<li class=" tsd-kind-function tsd-is-not-exported">
+			<a href="../globals.html#getcertcommonname" class="tsd-kind-icon">get<wbr>Cert<wbr>Common<wbr>Name</a>
+		</li>
+		<li class=" tsd-kind-function">
 			<a href="../globals.html#isdirectory" class="tsd-kind-icon">is<wbr>Directory</a>
 		</li>
 		<li class=" tsd-kind-function tsd-is-not-exported">
@@ -980,8 +989,10 @@ img { max-width: 100%; }
 					<section class="tsd-index-section ">
 						<h3>Methods</h3>
 						<ul class="tsd-index-list">
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="macostrust.html#exists" class="tsd-kind-icon">exists</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="macostrust.html#handleinstallresult" class="tsd-kind-icon">handle<wbr>Install<wbr>Result</a></li>
 							<li class="tsd-kind-method tsd-parent-kind-class"><a href="macostrust.html#installfromfile" class="tsd-kind-icon">install<wbr>From<wbr>File</a></li>
+							<li class="tsd-kind-method tsd-parent-kind-class"><a href="macostrust.html#uninstall" class="tsd-kind-icon">uninstall</a></li>
 						</ul>
 					</section>
 				</div>
@@ -996,31 +1007,57 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Overrides <a href="trust.html">Trust</a>.<a href="trust.html#name">name</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/58b558e/src/trust-cert.ts#L58">trust-cert.ts:58</a></li>
+						<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L68">trust-cert.ts:68</a></li>
 					</ul>
 				</aside>
 			</section>
 		</section>
 		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Methods</h2>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="exists" class="tsd-anchor"></a>
+				<h3>exists</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">exists<span class="tsd-signature-symbol">(</span>certPath<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L88">trust-cert.ts:88</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>certPath: <span class="tsd-signature-type">string</span></h5>
+							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4>
+					</li>
+				</ul>
+			</section>
 			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
 				<a name="handleinstallresult" class="tsd-anchor"></a>
 				<h3>handle<wbr>Install<wbr>Result</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
-					<li class="tsd-signature tsd-kind-icon">handle<wbr>Install<wbr>Result<span class="tsd-signature-symbol">(</span>stderr<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					<li class="tsd-signature tsd-kind-icon">handle<wbr>Install<wbr>Result<span class="tsd-signature-symbol">(</span>stderr<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, adding<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="trust.html">Trust</a>.<a href="trust.html#handleinstallresult">handleInstallResult</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/58b558e/src/trust-cert.ts#L44">trust-cert.ts:44</a></li>
+								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L54">trust-cert.ts:54</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>stderr: <span class="tsd-signature-type">string</span></h5>
+							</li>
+							<li>
+								<h5>adding: <span class="tsd-signature-type">boolean</span></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
@@ -1031,13 +1068,13 @@ img { max-width: 100%; }
 				<a name="installfromfile" class="tsd-anchor"></a>
 				<h3>install<wbr>From<wbr>File</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">install<wbr>From<wbr>File<span class="tsd-signature-symbol">(</span>certPath<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, certName<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+					<li class="tsd-signature tsd-kind-icon">install<wbr>From<wbr>File<span class="tsd-signature-symbol">(</span>certPath<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/58b558e/src/trust-cert.ts#L60">trust-cert.ts:60</a></li>
+								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L70">trust-cert.ts:70</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1045,8 +1082,28 @@ img { max-width: 100%; }
 							<li>
 								<h5>certPath: <span class="tsd-signature-type">string</span></h5>
 							</li>
+						</ul>
+						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+				<a name="uninstall" class="tsd-anchor"></a>
+				<h3>uninstall</h3>
+				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+					<li class="tsd-signature tsd-kind-icon">uninstall<span class="tsd-signature-symbol">(</span>certPath<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></li>
+				</ul>
+				<ul class="tsd-descriptions">
+					<li class="tsd-description">
+						<aside class="tsd-sources">
+							<ul>
+								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L81">trust-cert.ts:81</a></li>
+							</ul>
+						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
 							<li>
-								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> certName: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;New Root CA&quot;</span></h5>
+								<h5>certPath: <span class="tsd-signature-type">string</span></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4>

@@ -936,12 +936,15 @@ img { max-width: 100%; }
 			<a href="../globals.html#lstatasync" class="tsd-kind-icon">lstat<wbr>Async</a>
 		</li>
 		<li class=" tsd-kind-variable tsd-is-not-exported">
-			<a href="../globals.html#sudoexec" class="tsd-kind-icon">sudo<wbr>Exec</a>
+			<a href="../globals.html#nonsudoexec" class="tsd-kind-icon">non<wbr>Sudo<wbr>Exec</a>
 		</li>
 		<li class=" tsd-kind-function">
 			<a href="../globals.html#generatetrust" class="tsd-kind-icon">generate<wbr>Trust</a>
 		</li>
 		<li class=" tsd-kind-function tsd-is-not-exported">
+			<a href="../globals.html#getcertcommonname" class="tsd-kind-icon">get<wbr>Cert<wbr>Common<wbr>Name</a>
+		</li>
+		<li class=" tsd-kind-function">
 			<a href="../globals.html#isdirectory" class="tsd-kind-icon">is<wbr>Directory</a>
 		</li>
 		<li class=" tsd-kind-function tsd-is-not-exported">
@@ -961,13 +964,13 @@ img { max-width: 100%; }
 							<a href="macostrust.html" class="tsd-signature-type">MacOsTrust</a>
 						</li>
 						<li>
-							<a href="nsstrust.html" class="tsd-signature-type">NssTrust</a>
-						</li>
-						<li>
 							<a href="windowstrust.html" class="tsd-signature-type">WindowsTrust</a>
 						</li>
 						<li>
 							<a href="linuxtrust.html" class="tsd-signature-type">LinuxTrust</a>
+						</li>
+						<li>
+							<a href="nsstrust.html" class="tsd-signature-type">NssTrust</a>
 						</li>
 					</ul>
 				</li>
@@ -1000,7 +1003,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;&quot;</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/58b558e/src/trust-cert.ts#L42">trust-cert.ts:42</a></li>
+						<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L52">trust-cert.ts:52</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1011,19 +1014,22 @@ img { max-width: 100%; }
 				<a name="handleinstallresult" class="tsd-anchor"></a>
 				<h3>handle<wbr>Install<wbr>Result</h3>
 				<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">handle<wbr>Install<wbr>Result<span class="tsd-signature-symbol">(</span>stderr<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					<li class="tsd-signature tsd-kind-icon">handle<wbr>Install<wbr>Result<span class="tsd-signature-symbol">(</span>stderr<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, adding<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/58b558e/src/trust-cert.ts#L44">trust-cert.ts:44</a></li>
+								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L54">trust-cert.ts:54</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
 								<h5>stderr: <span class="tsd-signature-type">string</span></h5>
+							</li>
+							<li>
+								<h5>adding: <span class="tsd-signature-type">boolean</span></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
