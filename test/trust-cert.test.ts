@@ -11,7 +11,7 @@ describe('Full Test', () => {
   it('Installs test root cert', async () => {
     let trust = generateTrust()
     await trust.installFromFile(certPath)
-  })
+  }, 10000)
 
   it('Fails on non existent cert', async () => {
     const trust = generateTrust()
@@ -21,5 +21,5 @@ describe('Full Test', () => {
   it('Firefox Cert', async () => {
     const trust = generateTrust('nss')
     await trust.installFromFile(certPath)
-  })
+  }, 10000)
 })
