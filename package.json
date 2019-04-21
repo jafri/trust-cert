@@ -15,7 +15,7 @@
     "type": "git",
     "url": ""
   },
-  "license": "BSD-3",
+  "license": "BSD-3-Clause",
   "engines": {
     "node": ">=8.0.0"
   },
@@ -113,6 +113,6 @@
   },
   "dependencies": {
     "async-which": "^1.0.3",
-    "exec-root": "^1.0.3"
+    "exec-root": "^1.0.4"
   }
 }

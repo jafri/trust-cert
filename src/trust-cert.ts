@@ -2,9 +2,8 @@ import { copyFileSync, accessSync, existsSync, readdirSync, lstat } from 'fs'
 import { join, basename, extname } from 'path'
 import { promisify } from 'util'
 import which from 'async-which'
-import { exec } from 'exec-root'
+import { exec as sudoExec } from 'exec-root'
 
-const sudoExec = promisify(exec)
 const lstatAsync = promisify(lstat)
 
 const isDirectory = async (source: any) => {
