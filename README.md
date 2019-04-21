@@ -2,7 +2,9 @@
 
 > Trust Root Certificates in MacOs, Linux and Windows
 
-### Installation
+[Docs](https://jafri.github.io/trust-cert)
+
+## Installation
 NPM
 ```
 npm i trust-cert
@@ -13,7 +15,7 @@ Yarn
 yarn add trust-cert
 ```
 
-### Auto detect platform
+## Auto detect platform
 ```js
 import { generateTrust } from 'trust-cert'
 import { join } from 'path'
@@ -26,7 +28,7 @@ const trust = generateTrust()
 })
 ```
 
-### MacOs
+## MacOs
 ```js
 import { MacOsTrust } from 'trust-cert'
 import { join } from 'path'
@@ -39,8 +41,7 @@ const trust = new MacOsTrust()
 })
 ```
 
-
-### Linux
+## Linux
 ```js
 import { LinuxTrust } from 'trust-cert'
 import { join } from 'path'
@@ -53,7 +54,7 @@ const trust = new LinuxTrust()
 })
 ```
 
-### Windows
+## Windows
 ```js
 import { WindowsTrust } from 'trust-cert'
 import { join } from 'path'
@@ -66,7 +67,7 @@ const trust = new WindowsTrust()
 })
 ```
 
-### NSS (Cross-platform firefox)
+## NSS (Cross-platform firefox)
 Firefox does not use system store, so we package cross-platform nss binaries.
 
 ```js
@@ -82,3 +83,5 @@ const trust = new NssTrust()
 ```
 
 Note: The tests install the root CA in the certs folder into your store, modify the certs folder if you wish to test with your own cert.
+
+Credits: [mkcert](https://github.com/FiloSottile/mkcert)
