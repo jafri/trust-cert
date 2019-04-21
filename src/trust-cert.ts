@@ -138,6 +138,8 @@ export class WindowsTrust extends Trust {
       `certutil.exe -verify "${certPath}" | find "UNTRUSTED root"`
     )
 
+    console.log(stdout)
+    console.log(stderr)
     // Untrusted
     if (stdout || stderr) {
       return false
@@ -228,7 +230,6 @@ export class NssTrust extends Trust {
 
   async uninstall(certPath: string) {
     for (const db of await this.getFirefoxDatabases()) {
-      console.log(`${this.certutilPath} -D -d "${db}" -n "${await getCertCommonName(certPath)}"`)
       const { stderr } = await sudoExec(
         `${this.certutilPath} -D -d "${db}" -n "${await getCertCommonName(certPath)}"`
       )
