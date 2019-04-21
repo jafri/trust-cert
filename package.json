@@ -1,6 +1,6 @@
 {
   "name": "trust-cert",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Trust Root Certificates in MacOs, Linux, Windows and Firefox (Nss)",
   "keywords": [
     "trust",
