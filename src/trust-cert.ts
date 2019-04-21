@@ -102,6 +102,8 @@ export class WindowsTrust extends Trust {
     // Read in cert
     const cert = Certificate.fromPEM(readFileSync(certPath))
 
+    console.log(cert)
+
     if (cert) {
       const { stdout } = await sudoExec(`certutil.exe -dump ${certPath}`)
 
