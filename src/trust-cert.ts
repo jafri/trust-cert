@@ -105,7 +105,9 @@ export class WindowsTrust extends Trust {
     console.log(cert)
 
     if (cert) {
-      const { stdout, stderr, error } = await sudoExec(`certutil.exe -dump ${certPath}`)
+      const { stdout, stderr, error } = await sudoExec(
+        `certutil.exe -dump "${certPath}" | find "Serial"`
+      )
 
       console.log('Stdout:', stdout)
       console.log('Stderr:', stderr)
