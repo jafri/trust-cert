@@ -1,8 +1,20 @@
 {
   "name": "trust-cert",
-  "version": "1.0.6",
-  "description": "",
-  "keywords": [],
+  "version": "1.1.0",
+  "description": "Trust Root Certificates in MacOs, Linux, Windows and Firefox (Nss)",
+  "keywords": [
+    "trust",
+    "root",
+    "certificates",
+    "cert",
+    "store",
+    "macos",
+    "pki",
+    "x509",
+    "windows",
+    "firefox",
+    "nss"
+  ],
   "main": "dist/trust-cert.umd.js",
   "module": "dist/trust-cert.es5.js",
   "typings": "dist/types/trust-cert.d.ts",
