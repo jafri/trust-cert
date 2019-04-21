@@ -1,4 +1,6 @@
-# Trust Root Certificates in MacOs, Linux and Windows
+# trust-cert [![Build Status](https://travis-ci.com/jafri/trust-cert.svg?branch=master)](https://travis-ci.com/jafri/trust-cert)
+
+> Trust Root Certificates in MacOs, Linux and Windows
 
 ### Installation
 NPM
