@@ -3,8 +3,10 @@ import { join, basename, extname } from 'path'
 import { promisify } from 'util'
 import which from 'async-which'
 import { exec as sudoExec } from 'exec-root'
+import { exec } from 'child_process'
 import { Certificate } from '@fidm/x509'
 
+const nonSudoExec = promisify(exec)
 const lstatAsync = promisify(lstat)
 const DEFAULT_CERT_NAME = 'New Root CA'
 
@@ -105,13 +107,12 @@ export class WindowsTrust extends Trust {
     console.log(cert)
     console.log('Path:', `certutil.exe -dump "${certPath}" | find "Serial"`)
     if (cert) {
-      const { stdout, stderr, error } = await sudoExec(
+      const { stdout, stderr } = await nonSudoExec(
         `certutil.exe -dump "${certPath}" | find "Serial"`
       )
 
       console.log('Stdout:', stdout)
       console.log('Stderr:', stderr)
-      console.log('Error:', error)
 
       if (stdout) {
         // console.log(stdout)
