@@ -1,6 +1,8 @@
 import { generateTrust } from '../src/trust-cert'
 import { join } from 'path'
 
+const sleep = require('util').promisify(setTimeout)
+
 const certPath = join(__dirname, '..', 'certs/eos_root_ca.crt')
 const fakeCertPath = join(__dirname, '..', 'certs/eos_root_ca_fake.crt')
 
@@ -19,6 +21,7 @@ describe('Full Platform Test', () => {
   it('Installs test root cert', async () => {
     let trust = generateTrust()
     await trust.installFromFile(certPath)
+    await sleep(2000)
   }, 10000)
 
   it('Confirm installed cert', async () => {
@@ -30,6 +33,7 @@ describe('Full Platform Test', () => {
   it('Uninstalls test root cert', async () => {
     let trust = generateTrust()
     await trust.uninstall(certPath)
+    await sleep(2000)
   }, 10000)
 
   it('Confirm uninstalled cert', async () => {
