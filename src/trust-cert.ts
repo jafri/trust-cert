@@ -135,9 +135,7 @@ export class WindowsTrust extends Trust {
 
   async exists(certPath: string): Promise<boolean> {
     try {
-      const { stdout, stderr } = await nonSudoExec(
-        `certutil.exe -verify "${certPath}" | find "UNTRUSTED root"`
-      )
+      const { stdout, stderr } = await nonSudoExec(`certutil.exe -verify "${certPath}"`)
 
       console.log(stdout)
       console.log(stderr)
