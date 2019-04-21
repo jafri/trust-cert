@@ -1,7 +1,7 @@
 import { copyFileSync, accessSync, existsSync, readdirSync, lstat } from 'fs'
 import { join, basename, extname } from 'path'
 import { promisify } from 'util'
-import which from 'which'
+import which from 'async-which'
 import { exec } from 'exec-root'
 
 const sudoExec = promisify(exec)
@@ -189,7 +189,7 @@ export class LinuxTrust extends Trust {
     }
 
     if (this.systemTrustCommands) {
-      let resolved = which.sync(this.systemTrustCommands[0], { nothrow: true })
+      const resolved = which(this.systemTrustCommands[0])
 
       if (!resolved) {
         this.systemTrustCommands = []
