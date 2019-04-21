@@ -1,13 +1,13 @@
-import { copyFileSync, accessSync, existsSync, readdirSync, lstat } from 'fs'
+import { copyFileSync, accessSync, existsSync, readdirSync, lstat, readFileSync } from 'fs'
 import { join, basename, extname } from 'path'
 import { promisify } from 'util'
 import which from 'async-which'
+import { Certificate } from '@fidm/x509'
 import { exec as sudoExec } from 'exec-root'
 import { exec } from 'child_process'
 
 const nonSudoExec = promisify(exec)
 const lstatAsync = promisify(lstat)
-const DEFAULT_CERT_NAME = 'New Root CA'
 
 const isDirectory = async (source: any) => {
   try {
@@ -24,6 +24,14 @@ const isFile = async (source: any) => {
   } catch (e) {
     return false
   }
+}
+const getCertCommonName = async (certPath: string) => {
+  // Check cert exists
+  accessSync(certPath)
+
+  // Read file
+  const cert = Certificate.fromPEM(readFileSync(certPath))
+  return cert.issuer.commonName
 }
 
 export function generateTrust(platform: string = process.platform) {
@@ -43,6 +51,10 @@ export function generateTrust(platform: string = process.platform) {
 export class Trust {
   name: string = ''
 
+  async exists(certPath: string): Promise<boolean> {
+    return false
+  }
+
   handleInstallResult(stderr: string, adding: boolean) {
     if (stderr) {
       throw {
@@ -59,7 +71,7 @@ export class Trust {
 export class MacOsTrust extends Trust {
   name: string = 'MacOs'
 
-  async installFromFile(certPath: string, certName: string = DEFAULT_CERT_NAME) {
+  async installFromFile(certPath: string) {
     // Check cert exists
     accessSync(certPath)
 
@@ -70,18 +82,31 @@ export class MacOsTrust extends Trust {
     this.handleInstallResult(stderr, true)
   }
 
-  async uninstall(certPath: string, certName: string = DEFAULT_CERT_NAME) {
-    // Check cert exists
-    accessSync(certPath)
-    const { stderr } = await sudoExec(`security remove-trusted-cert -d "${certPath}"`)
+  async uninstall(certPath: string) {
+    const { stderr } = await sudoExec(
+      `security delete-certificate -c "${await getCertCommonName(certPath)}"`
+    )
     this.handleInstallResult(stderr, false)
+  }
+
+  async exists(certPath: string): Promise<boolean> {
+    try {
+      await nonSudoExec(
+        `security find-certificate -c ${await getCertCommonName(
+          certPath
+        )} "/Library/Keychains/System.keychain"`
+      )
+      return true
+    } catch (e) {
+      return false
+    }
   }
 }
 
 export class WindowsTrust extends Trust {
   name: string = 'Windows'
 
-  async installFromFile(certPath: string, certName: string = DEFAULT_CERT_NAME) {
+  async installFromFile(certPath: string) {
     // Check cert exists
     accessSync(certPath)
 
@@ -96,7 +121,7 @@ export class WindowsTrust extends Trust {
     this.handleInstallResult(stderr, true)
   }
 
-  async uninstall(certPath: string, certName: string = DEFAULT_CERT_NAME) {
+  async uninstall(certPath: string) {
     const { stdout, stderr } = await nonSudoExec(`certutil.exe -dump "${certPath}" | find "Serial"`)
 
     if (stdout) {
@@ -105,6 +130,20 @@ export class WindowsTrust extends Trust {
       this.handleInstallResult(stderr, false)
     } else {
       this.handleInstallResult(stderr, false)
+    }
+  }
+
+  async exists(certPath: string): Promise<boolean> {
+    const { stdout, stderr } = await nonSudoExec(
+      `certutil.exe -verify "${certPath}" | find "UNTRUSTED root"`
+    )
+
+    // Untrusted
+    if (stdout || stderr) {
+      return false
+      // Trusted
+    } else {
+      return true
     }
   }
 
@@ -145,32 +184,28 @@ export class LinuxTrust extends Trust {
     }
   }
 
-  async installFromFile(certPath: string, certName: string = DEFAULT_CERT_NAME) {
-    // Check cert exists
+  async installFromFile(certPath: string) {
+    // Check cert exists and copy cert to trust path
     existsSync(certPath)
-
-    // Change file name
-    const certFileName = basename(certPath, extname(certPath))
-    const newCertPath = this.systemTrustFilename.replace('%s', certFileName)
-
-    // Copy cert to trust path
-    copyFileSync(certPath, newCertPath)
+    copyFileSync(certPath, this.getNewCertPath(certPath))
 
     // Update trust store
     const { stderr } = await sudoExec(this.systemTrustCommands.join(' '))
-
     this.handleInstallResult(stderr, true)
   }
 
-  async uninstall(certPath: string, certName: string = DEFAULT_CERT_NAME) {
-    // Change file name
-    const certFileName = basename(certPath, extname(certPath))
-    const newCertPath = this.systemTrustFilename.replace('%s', certFileName)
-
-    // Delete
-    const { stderr } = await sudoExec(`rm -f ${newCertPath}`)
-
+  async uninstall(certPath: string) {
+    const { stderr } = await sudoExec(`rm -f ${this.getNewCertPath(certPath)}`)
     this.handleInstallResult(stderr, false)
+  }
+
+  async exists(certPath: string): Promise<boolean> {
+    return isFile(this.getNewCertPath(certPath))
+  }
+
+  getNewCertPath(certPath: string): string {
+    const certFileName = basename(certPath, extname(certPath))
+    return this.systemTrustFilename.replace('%s', certFileName)
   }
 }
 
@@ -179,25 +214,43 @@ export class NssTrust extends Trust {
   nssProfileDir: string = this.getNssProfileDir()
   certutilPath: string = this.getCertutilPath()
 
-  async installFromFile(certPath: string, certName: string = DEFAULT_CERT_NAME) {
-    // Check cert exists
-    accessSync(certPath)
-
+  async installFromFile(certPath: string) {
     for (const db of await this.getFirefoxDatabases()) {
       const { stderr } = await sudoExec(
-        `${this.certutilPath} -A -d "${db}" -t C,, -n "${certName}" -i "${certPath}"`
+        `${this.certutilPath} -A -d "${db}" -t C,, -n "${await getCertCommonName(
+          certPath
+        )}" -i "${certPath}"`
       )
 
       this.handleInstallResult(stderr, true)
     }
   }
 
-  async uninstall(certPath: string, certName: string = DEFAULT_CERT_NAME) {
+  async uninstall(certPath: string) {
     for (const db of await this.getFirefoxDatabases()) {
-      const { stderr } = await sudoExec(`${this.certutilPath} -D -d "${db}" -n "${certName}"`)
+      console.log(`${this.certutilPath} -D -d "${db}" -n "${await getCertCommonName(certPath)}"`)
+      const { stderr } = await sudoExec(
+        `${this.certutilPath} -D -d "${db}" -n "${await getCertCommonName(certPath)}"`
+      )
 
       this.handleInstallResult(stderr, false)
     }
+  }
+
+  async exists(certPath: string): Promise<boolean> {
+    let allExist = true
+
+    for (const db of await this.getFirefoxDatabases()) {
+      try {
+        await nonSudoExec(
+          `${this.certutilPath} -V -d "${db}" -n "${await getCertCommonName(certPath)}" -u L`
+        )
+      } catch (e) {
+        allExist = false
+      }
+    }
+
+    return allExist
   }
 
   async getFirefoxDatabases() {
