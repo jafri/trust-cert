@@ -126,18 +126,19 @@ export class NssTrust extends Trust {
 
   getCertutilPath(): string {
     if (process.platform === 'win32') {
-      if (process.arch === 'x32') {
-        return join(__dirname, '..', 'nss', 'win32', 'certutil.exe')
-      } else {
+      if (process.arch === 'x64') {
         return join(__dirname, '..', 'nss', 'win64', 'certutil.exe')
+        // ia32
+      } else {
+        return join(__dirname, '..', 'nss', 'win32', 'certutil.exe')
       }
     } else if (process.platform === 'darwin') {
       return join(__dirname, '..', 'nss', 'mac', 'certutil')
     } else if (process.platform === 'linux') {
-      if (process.arch === 'x32') {
-        return join(__dirname, '..', 'nss', 'linux32', 'certutil')
-      } else {
+      if (process.arch === 'x64') {
         return join(__dirname, '..', 'nss', 'linux64', 'certutil')
+      } else {
+        return join(__dirname, '..', 'nss', 'linux32', 'certutil')
       }
     } else {
       throw new Error('NSS only supported on MacOs, Linux and Windows')
