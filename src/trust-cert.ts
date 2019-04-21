@@ -104,18 +104,15 @@ export class WindowsTrust extends Trust {
     // Read in cert
     const cert = Certificate.fromPEM(readFileSync(certPath))
 
-    console.log(cert)
-    console.log('Path:', `certutil.exe -dump "${certPath}" | find "Serial"`)
     if (cert) {
       const { stdout, stderr } = await nonSudoExec(
         `certutil.exe -dump "${certPath}" | find "Serial"`
       )
 
-      console.log('Stdout:', stdout)
-      console.log('Stderr:', stderr)
-
       if (stdout) {
-        // console.log(stdout)
+        const [, , serialNumber] = stdout.split(' ')
+        const { stderr } = await sudoExec(`certutil -delstore "Root" "${serialNumber}"`)
+        this.handleInstallResult(stderr, true)
       } else {
         this.handleInstallResult(stderr, true)
       }
