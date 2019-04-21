@@ -44,7 +44,7 @@ describe('Full Platform Test', () => {
   })
 })
 
-const firefoxCondition = async trust =>
+const firefoxCondition = async (trust: NssTrust) =>
   (await isDirectory(trust.nssProfileDir)) && (await trust.getFirefoxDatabases()).length
 
 describe('Full Firefox Test', () => {
