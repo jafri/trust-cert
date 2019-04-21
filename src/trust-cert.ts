@@ -1,10 +1,9 @@
-import { copyFileSync, accessSync, existsSync, readdirSync, lstat, readFileSync } from 'fs'
+import { copyFileSync, accessSync, existsSync, readdirSync, lstat } from 'fs'
 import { join, basename, extname } from 'path'
 import { promisify } from 'util'
 import which from 'async-which'
 import { exec as sudoExec } from 'exec-root'
 import { exec } from 'child_process'
-import { Certificate } from '@fidm/x509'
 
 const nonSudoExec = promisify(exec)
 const lstatAsync = promisify(lstat)
@@ -98,24 +97,14 @@ export class WindowsTrust extends Trust {
   }
 
   async uninstall(certPath: string, certName: string = DEFAULT_CERT_NAME) {
-    // Check cert exists
-    accessSync(certPath)
+    const { stdout, stderr } = await nonSudoExec(`certutil.exe -dump "${certPath}" | find "Serial"`)
 
-    // Read in cert
-    const cert = Certificate.fromPEM(readFileSync(certPath))
-
-    if (cert) {
-      const { stdout, stderr } = await nonSudoExec(
-        `certutil.exe -dump "${certPath}" | find "Serial"`
-      )
-
-      if (stdout) {
-        const [, , serialNumber] = stdout.split(' ')
-        const { stderr } = await sudoExec(`certutil -delstore "Root" "${serialNumber.trim()}"`)
-        this.handleInstallResult(stderr, false)
-      } else {
-        this.handleInstallResult(stderr, false)
-      }
+    if (stdout) {
+      const [, , serialNumber] = stdout.split(' ')
+      const { stderr } = await sudoExec(`certutil -delstore "Root" "${serialNumber.trim()}"`)
+      this.handleInstallResult(stderr, false)
+    } else {
+      this.handleInstallResult(stderr, false)
     }
   }
 

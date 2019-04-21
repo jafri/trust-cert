@@ -1,6 +1,6 @@
 {
   "name": "trust-cert",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Trust Root Certificates in MacOs, Linux, Windows and Firefox (Nss)",
   "keywords": [
     "trust",
@@ -124,7 +124,6 @@
     "typescript": "^3.0.3"
   },
   "dependencies": {
-    "@fidm/x509": "1.2.1",
     "async-which": "^1.0.3",
     "exec-root": "^1.0.4"
   }
