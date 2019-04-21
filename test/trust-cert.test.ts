@@ -21,7 +21,7 @@ describe('Full Platform Test', () => {
   it('Installs test root cert', async () => {
     let trust = generateTrust()
     await trust.installFromFile(certPath)
-    await sleep(2000)
+    await sleep(5000)
   }, 10000)
 
   it('Confirm installed cert', async () => {
