@@ -246,9 +246,11 @@ export class NssTrust extends Trust {
 
     for (const db of await this.getFirefoxDatabases()) {
       try {
-        await nonSudoExec(
+        const { stdout, stderr } = await nonSudoExec(
           `${this.certutilPath} -V -d "${db}" -n "${await getCertCommonName(certPath)}" -u L`
         )
+        console.log('Firefox exists stdout:', stdout)
+        console.log('Firefox exists stderr:', stderr)
       } catch (e) {
         allExist = false
       }
