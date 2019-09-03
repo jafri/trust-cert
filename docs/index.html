@@ -1042,7 +1042,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">lstat<wbr>Async<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">__promisify__</span><span class="tsd-signature-symbol"> =&nbsp;promisify(lstat)</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L10">trust-cert.ts:10</a></li>
+						<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/9b9005b/src/trust-cert.ts#L11">trust-cert.ts:11</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1052,7 +1052,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">non<wbr>Sudo<wbr>Exec<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">__promisify__</span><span class="tsd-signature-symbol"> =&nbsp;promisify(exec)</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L9">trust-cert.ts:9</a></li>
+						<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/9b9005b/src/trust-cert.ts#L10">trust-cert.ts:10</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1063,19 +1063,22 @@ img { max-width: 100%; }
 				<a name="generatetrust" class="tsd-anchor"></a>
 				<h3>generate<wbr>Trust</h3>
 				<ul class="tsd-signatures tsd-kind-function">
-					<li class="tsd-signature tsd-kind-icon">generate<wbr>Trust<span class="tsd-signature-symbol">(</span>platform<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="classes/macostrust.html" class="tsd-signature-type">MacOsTrust</a><span class="tsd-signature-symbol"> | </span><a href="classes/windowstrust.html" class="tsd-signature-type">WindowsTrust</a><span class="tsd-signature-symbol"> | </span><a href="classes/linuxtrust.html" class="tsd-signature-type">LinuxTrust</a><span class="tsd-signature-symbol"> | </span><a href="classes/nsstrust.html" class="tsd-signature-type">NssTrust</a></li>
+					<li class="tsd-signature tsd-kind-icon">generate<wbr>Trust<span class="tsd-signature-symbol">(</span>platform<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, appName<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="classes/macostrust.html" class="tsd-signature-type">MacOsTrust</a><span class="tsd-signature-symbol"> | </span><a href="classes/windowstrust.html" class="tsd-signature-type">WindowsTrust</a><span class="tsd-signature-symbol"> | </span><a href="classes/linuxtrust.html" class="tsd-signature-type">LinuxTrust</a><span class="tsd-signature-symbol"> | </span><a href="classes/nsstrust.html" class="tsd-signature-type">NssTrust</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L37">trust-cert.ts:37</a></li>
+								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/9b9005b/src/trust-cert.ts#L38">trust-cert.ts:38</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
 						<ul class="tsd-parameters">
 							<li>
-								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> platform: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;process.platform</span></h5>
+								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> platform: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;os.platform()</span></h5>
+							</li>
+							<li>
+								<h5><span class="tsd-flag ts-flagDefault value">Default value</span> appName: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;Certificate Trust&quot;</span></h5>
 							</li>
 						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="classes/macostrust.html" class="tsd-signature-type">MacOsTrust</a>
@@ -1099,7 +1102,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L28">trust-cert.ts:28</a></li>
+								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/9b9005b/src/trust-cert.ts#L29">trust-cert.ts:29</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1122,7 +1125,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L12">trust-cert.ts:12</a></li>
+								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/9b9005b/src/trust-cert.ts#L13">trust-cert.ts:13</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1145,7 +1148,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L20">trust-cert.ts:20</a></li>
+								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/9b9005b/src/trust-cert.ts#L21">trust-cert.ts:21</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>

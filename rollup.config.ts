@@ -12,9 +12,12 @@ export default {
   input: `src/${libraryName}.ts`,
   output: [
     { file: pkg.module, format: 'es', sourcemap: true },
+    { file: pkg.main, format: 'cjs', sourcemap: true }
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
-  external: [],
+  external: [
+    "@fidm/x509", "async-which", "exec-root", "path", "fs", "child_process", "util", "os"
+  ],
   watch: {
     include: 'src/**',
   },

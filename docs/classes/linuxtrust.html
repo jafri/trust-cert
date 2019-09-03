@@ -912,8 +912,11 @@ img { max-width: 100%; }
 		<li class="current tsd-kind-class">
 			<a href="linuxtrust.html" class="tsd-kind-icon">Linux<wbr>Trust</a>
 			<ul>
-				<li class=" tsd-kind-constructor tsd-parent-kind-class">
+				<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
 					<a href="linuxtrust.html#constructor" class="tsd-kind-icon">constructor</a>
+				</li>
+				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+					<a href="linuxtrust.html#appname" class="tsd-kind-icon">app<wbr>Name</a>
 				</li>
 				<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-overwrite">
 					<a href="linuxtrust.html#name" class="tsd-kind-icon">name</a>
@@ -995,12 +998,13 @@ img { max-width: 100%; }
 					<section class="tsd-index-section ">
 						<h3>Constructors</h3>
 						<ul class="tsd-index-list">
-							<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="linuxtrust.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="linuxtrust.html#constructor" class="tsd-kind-icon">constructor</a></li>
 						</ul>
 					</section>
 					<section class="tsd-index-section ">
 						<h3>Properties</h3>
 						<ul class="tsd-index-list">
+							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><a href="linuxtrust.html#appname" class="tsd-kind-icon">app<wbr>Name</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class tsd-is-overwrite"><a href="linuxtrust.html#name" class="tsd-kind-icon">name</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class"><a href="linuxtrust.html#systemtrustcommands" class="tsd-kind-icon">system<wbr>Trust<wbr>Commands</a></li>
 							<li class="tsd-kind-property tsd-parent-kind-class"><a href="linuxtrust.html#systemtrustfilename" class="tsd-kind-icon">system<wbr>Trust<wbr>Filename</a></li>
@@ -1021,19 +1025,26 @@ img { max-width: 100%; }
 		</section>
 		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Constructors</h2>
-			<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class">
+			<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
 				<a name="constructor" class="tsd-anchor"></a>
 				<h3>constructor</h3>
-				<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-					<li class="tsd-signature tsd-kind-icon">new <wbr>Linux<wbr>Trust<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="linuxtrust.html" class="tsd-signature-type">LinuxTrust</a></li>
+				<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+					<li class="tsd-signature tsd-kind-icon">new <wbr>Linux<wbr>Trust<span class="tsd-signature-symbol">(</span>appName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="linuxtrust.html" class="tsd-signature-type">LinuxTrust</a></li>
 				</ul>
 				<ul class="tsd-descriptions">
 					<li class="tsd-description">
 						<aside class="tsd-sources">
+							<p>Overrides <a href="trust.html">Trust</a>.<a href="trust.html#constructor">constructor</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L163">trust-cert.ts:163</a></li>
+								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/9b9005b/src/trust-cert.ts#L177">trust-cert.ts:177</a></li>
 							</ul>
 						</aside>
+						<h4 class="tsd-parameters-title">Parameters</h4>
+						<ul class="tsd-parameters">
+							<li>
+								<h5>appName: <span class="tsd-signature-type">string</span></h5>
+							</li>
+						</ul>
 						<h4 class="tsd-returns-title">Returns <a href="linuxtrust.html" class="tsd-signature-type">LinuxTrust</a></h4>
 					</li>
 				</ul>
@@ -1041,6 +1052,17 @@ img { max-width: 100%; }
 		</section>
 		<section class="tsd-panel-group tsd-member-group ">
 			<h2>Properties</h2>
+			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited">
+				<a name="appname" class="tsd-anchor"></a>
+				<h3>app<wbr>Name</h3>
+				<div class="tsd-signature tsd-kind-icon">app<wbr>Name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;&quot;</span></div>
+				<aside class="tsd-sources">
+					<p>Inherited from <a href="trust.html">Trust</a>.<a href="trust.html#appname">appName</a></p>
+					<ul>
+						<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/9b9005b/src/trust-cert.ts#L54">trust-cert.ts:54</a></li>
+					</ul>
+				</aside>
+			</section>
 			<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-overwrite">
 				<a name="name" class="tsd-anchor"></a>
 				<h3>name</h3>
@@ -1048,7 +1070,7 @@ img { max-width: 100%; }
 				<aside class="tsd-sources">
 					<p>Overrides <a href="trust.html">Trust</a>.<a href="trust.html#name">name</a></p>
 					<ul>
-						<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L157">trust-cert.ts:157</a></li>
+						<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/9b9005b/src/trust-cert.ts#L171">trust-cert.ts:171</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1058,7 +1080,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">system<wbr>Trust<wbr>Commands<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[]</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L163">trust-cert.ts:163</a></li>
+						<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/9b9005b/src/trust-cert.ts#L177">trust-cert.ts:177</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1068,7 +1090,7 @@ img { max-width: 100%; }
 				<div class="tsd-signature tsd-kind-icon">system<wbr>Trust<wbr>Filename<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;&quot;</span></div>
 				<aside class="tsd-sources">
 					<ul>
-						<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L160">trust-cert.ts:160</a></li>
+						<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/9b9005b/src/trust-cert.ts#L174">trust-cert.ts:174</a></li>
 					</ul>
 				</aside>
 			</section>
@@ -1085,7 +1107,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L203">trust-cert.ts:203</a></li>
+								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/9b9005b/src/trust-cert.ts#L223">trust-cert.ts:223</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1108,7 +1130,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L207">trust-cert.ts:207</a></li>
+								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/9b9005b/src/trust-cert.ts#L227">trust-cert.ts:227</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1132,7 +1154,7 @@ img { max-width: 100%; }
 						<aside class="tsd-sources">
 							<p>Inherited from <a href="trust.html">Trust</a>.<a href="trust.html#handleinstallresult">handleInstallResult</a></p>
 							<ul>
-								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L54">trust-cert.ts:54</a></li>
+								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/9b9005b/src/trust-cert.ts#L60">trust-cert.ts:60</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1158,7 +1180,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L188">trust-cert.ts:188</a></li>
+								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/9b9005b/src/trust-cert.ts#L202">trust-cert.ts:202</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1181,7 +1203,7 @@ img { max-width: 100%; }
 					<li class="tsd-description">
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/b22ec3a/src/trust-cert.ts#L198">trust-cert.ts:198</a></li>
+								<li>Defined in <a href="https://github.com/jafri/trust-cert/blob/9b9005b/src/trust-cert.ts#L215">trust-cert.ts:215</a></li>
 							</ul>
 						</aside>
 						<h4 class="tsd-parameters-title">Parameters</h4>

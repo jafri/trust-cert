@@ -48,7 +48,7 @@ const firefoxCondition = async (trust: NssTrust) =>
   (await isDirectory(trust.nssProfileDir)) && (await trust.getFirefoxDatabases()).length
 
 describe('Full Firefox Test', () => {
-  const trust = new NssTrust()
+  const trust = new NssTrust('Trust Cert')
 
   it('Installs Firefox Cert', async () => {
     if (await firefoxCondition(trust)) {

@@ -5,6 +5,7 @@ import which from 'async-which'
 import { Certificate } from '@fidm/x509'
 import { exec as sudoExec } from 'exec-root'
 import { exec } from 'child_process'
+import * as os from 'os'
 
 const nonSudoExec = promisify(exec)
 const lstatAsync = promisify(lstat)
@@ -34,15 +35,18 @@ const getCertCommonName = async (certPath: string) => {
   return cert.issuer.commonName
 }
 
-export function generateTrust(platform: string = process.platform) {
+export function generateTrust(
+  platform: string = os.platform(),
+  appName: string = 'Certificate Trust'
+) {
   if (platform === 'darwin') {
-    return new MacOsTrust()
+    return new MacOsTrust(appName)
   } else if (platform === 'win32') {
-    return new WindowsTrust()
+    return new WindowsTrust(appName)
   } else if (platform === 'linux') {
-    return new LinuxTrust()
+    return new LinuxTrust(appName)
   } else if (platform === 'nss') {
-    return new NssTrust()
+    return new NssTrust(appName)
   } else {
     throw new Error('Only MacOs, Linux and Windows supported')
   }
@@ -50,6 +54,11 @@ export function generateTrust(platform: string = process.platform) {
 
 export class Trust {
   name: string = ''
+  appName: string = ''
+
+  constructor(appName: string) {
+    this.appName = appName
+  }
 
   handleInstallResult(stderr: string, adding: boolean) {
     if (stderr) {
@@ -72,7 +81,8 @@ export class MacOsTrust extends Trust {
     accessSync(certPath)
 
     const { stderr } = await sudoExec(
-      `security add-trusted-cert -d -k /Library/Keychains/System.keychain "${certPath}"`
+      `security add-trusted-cert -d -k /Library/Keychains/System.keychain "${certPath}"`,
+      { name: this.appName }
     )
 
     this.handleInstallResult(stderr, true)
@@ -80,7 +90,8 @@ export class MacOsTrust extends Trust {
 
   async uninstall(certPath: string) {
     const { stderr } = await sudoExec(
-      `security delete-certificate -c "${await getCertCommonName(certPath)}"`
+      `security delete-certificate -c "${await getCertCommonName(certPath)}"`,
+      { name: this.appName }
     )
     this.handleInstallResult(stderr, false)
   }
@@ -112,7 +123,9 @@ export class WindowsTrust extends Trust {
     // Copy cert to trust path
     copyFileSync(certPath, newCertPath)
 
-    const { stderr } = await sudoExec(`certutil -addstore "Root" "${newCertPath}"`)
+    const { stderr } = await sudoExec(`certutil -addstore "Root" "${newCertPath}"`, {
+      name: this.appName
+    })
 
     this.handleInstallResult(stderr, true)
   }
@@ -122,7 +135,9 @@ export class WindowsTrust extends Trust {
 
     if (stdout) {
       const [, , serialNumber] = stdout.split(' ')
-      const { stderr } = await sudoExec(`certutil -delstore "Root" "${serialNumber.trim()}"`)
+      const { stderr } = await sudoExec(`certutil -delstore "Root" "${serialNumber.trim()}"`, {
+        name: this.appName
+      })
       this.handleInstallResult(stderr, false)
     } else {
       this.handleInstallResult(stderr, false)
@@ -162,8 +177,8 @@ export class LinuxTrust extends Trust {
   // systemTrustCommands is the command used to update the system truststore.
   systemTrustCommands: string[] = []
 
-  constructor() {
-    super()
+  constructor(appName: string) {
+    super(appName)
 
     if (existsSync('/etc/pki/ca-trust/source/anchors/')) {
       this.systemTrustFilename = '/etc/pki/ca-trust/source/anchors/%s.pem'
@@ -191,12 +206,14 @@ export class LinuxTrust extends Trust {
     copyFileSync(certPath, this.getNewCertPath(certPath))
 
     // Update trust store
-    const { stderr } = await sudoExec(this.systemTrustCommands.join(' '))
+    const { stderr } = await sudoExec(this.systemTrustCommands.join(' '), { name: this.appName })
     this.handleInstallResult(stderr, true)
   }
 
   async uninstall(certPath: string) {
-    const { stderr } = await sudoExec(`rm -f ${this.getNewCertPath(certPath)}`)
+    const { stderr } = await sudoExec(`rm -f ${this.getNewCertPath(certPath)}`, {
+      name: this.appName
+    })
     this.handleInstallResult(stderr, false)
   }
 
@@ -220,7 +237,8 @@ export class NssTrust extends Trust {
       const { stderr } = await sudoExec(
         `${this.certutilPath} -A -d "${db}" -t C,, -n "${await getCertCommonName(
           certPath
-        )}" -i "${certPath}"`
+        )}" -i "${certPath}"`,
+        { name: this.appName }
       )
 
       this.handleInstallResult(stderr, true)
@@ -230,7 +248,8 @@ export class NssTrust extends Trust {
   async uninstall(certPath: string) {
     for (const db of await this.getFirefoxDatabases()) {
       const { stderr } = await sudoExec(
-        `${this.certutilPath} -D -d "${db}" -n "${await getCertCommonName(certPath)}"`
+        `${this.certutilPath} -D -d "${db}" -n "${await getCertCommonName(certPath)}"`,
+        { name: this.appName }
       )
 
       this.handleInstallResult(stderr, false)
@@ -286,11 +305,12 @@ export class NssTrust extends Trust {
   }
 
   getNssProfileDir(): string {
-    if (process.platform === 'win32') {
+    const platform = os.platform()
+    if (platform === 'win32') {
       return process.env['USERPROFILE'] + '\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles'
-    } else if (process.platform === 'darwin') {
+    } else if (platform === 'darwin') {
       return process.env['HOME'] + '/Library/Application Support/Firefox/Profiles/'
-    } else if (process.platform === 'linux') {
+    } else if (platform === 'linux') {
       return process.env['HOME'] + '/.mozilla/firefox/'
     } else {
       return ''
